@@ -322,9 +322,9 @@ elif selection == "Questionnaire":
     total_retombes_percentage = (total_retombes / total_sejour * 100) if total_sejour != 0 else 0
 
     st.write("## Résultat global")
-    st.write(f"- **Montant total du séjour :** {total_sejour:.2f} €")
-    st.write(f"- **Retombées économiques locales totales :** {total_retombes_percentage:.2f}%")
-    st.write(f"- **Montant des retombées économiques locales :** {total_retombes:.2f} €")
+    st.write(f"**Montant total du séjour :** {total_sejour:.2f} €")
+    st.write(f"**Retombées économiques locales totales :** {total_retombes_percentage:.2f}%")
+    st.write(f"**Montant des retombées économiques locales :** {total_retombes:.2f} €")
 
 elif selection == "Informations":
     st.markdown("# ℹ️ Informations")
