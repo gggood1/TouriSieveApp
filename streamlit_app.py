@@ -270,8 +270,72 @@ elif selection == "Questionnaire":
         st.write(f"- **Retombées économiques locales :** {total_impact_percentage:.2f}%")
         st.write(f"- **Montant des retombées économiques :** {total_impact_value:.2f} €")
 
+#Activités — En cours
+
     with st.expander("Activités"):
-        st.write("Section en cours de développement.")
+    # Saisir le prix pour la section "Activités"
+        st.session_state.prices["Activités"] = st.number_input(
+        "Renseigner le prix (en €) pour la section Activités :", 
+        min_value=0, 
+        key="price_activités"
+    )
+
+    # Définir les pondérations
+        weights = {
+            "q1_1": 0.60 * (10 / 65),
+            "q1_2": 0.60 * (30 / 65),
+            "q1_3": 0.60 * (10 / 65),
+            "q1_4": 0.60 * (15 / 65),
+            "q2": 0.15,
+            "q3": 0.15,
+            "q4": 0.10
+    }
+
+    # Définir les impacts des réponses
+        impacts = {
+            "q1_1": {"Oui": 1.00, "Non": 0.04, "Je ne sais pas": 0.00},
+            "q1_2": {"Oui": 1.00, "Non": 0.08, "Je ne sais pas": 0.00},
+            "q1_3": {"Oui": 1.00, "Non": 0.025, "Je ne sais pas": 0.00},
+            "q1_4": {"Oui": 1.00, "Non": 0.015, "Je ne sais pas": 0.00},
+            "q2": {"Oui": 1.00, "Non": 0.30, "Je ne sais pas": 0.00},
+            "q3": {"Oui": 1.00, "Non": 0.00, "Je ne sais pas": 0.00},
+            "q4": {"Oui": 0.75, "Non": 0.30, "Je ne sais pas": 0.00}
+    }
+
+    # Questions associées
+        questions = {
+            "q1_1": "Les activités de plein air et excursions naturelles utilisent-elles des ressources locales pour leurs opérations ? (ex. : randonnées, visites de parcs naturels, excursions dans des zones protégées gérées localement)",
+            "q1_2": "Les activités culturelles utilisent-elles des ressources locales pour leurs opérations ? (ex. : visites de musées, monuments historiques, spectacles culturels)",
+            "q1_3": "Les activités sportives et d’aventure utilisent-elles des ressources locales pour leurs opérations ? (ex. : sports nautiques, escalade, VTT, équipements)",
+            "q1_4": "Les activités de bien-être utilisent-elles des ressources locales pour leurs opérations ? (ex. : spas, retraites de yoga)",
+            "q2": "Les guides et animateurs des activités sont-ils majoritairement locaux ?",
+            "q3": "Les activités soutiennent-elles des projets de développement local (patrimoine, culture) ?",
+            "q4": "La majorité des activités touristiques sont-elles soumises à des taxes ou redevances locales ? (droit d’accès à des parcs protégés, taxes sur l’utilisation de ressources naturelles, licences d’exploitation)"
+    }
+
+    # Calcul du total des impacts
+        total_impact = 0
+        for q, weight in weights.items():
+        # Créer une question avec des choix
+            response = st.radio(
+            questions[q], 
+            ["Oui", "Non", "Je ne sais pas"], 
+            index=2, 
+            key=f"activités_{q}"
+        )            
+            total_impact += impacts[q].get(response, 0.00) * weight
+
+    # Calcul des retombées économiques
+        total_impact_percentage = total_impact * 100
+        total_impact_value = st.session_state.prices["Activités"] * total_impact
+        st.session_state.total_impact_values["Activités"] = total_impact_value
+
+    # Afficher les résultats
+        st.write(f"### Résultat pour Activités")
+        st.write(f"- **Retombées économiques locales :** {total_impact_percentage:.2f}%")
+        st.write(f"- **Montant des retombées économiques :** {total_impact_value:.2f} €")
+
+#Activités — En cours 
 
     with st.expander("Autre"):
         st.session_state.prices["Autre"] = st.number_input("Renseigner le prix (en €) pour la section Autre :", min_value=0, key="price_autre")
